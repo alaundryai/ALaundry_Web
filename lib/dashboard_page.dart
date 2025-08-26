@@ -206,17 +206,23 @@ class _DashboardPageState extends State<DashboardPage> with SingleTickerProvider
               ),
             ),
             actions: [
-              IconButton(
-                icon: Icon(_isGridView ? Icons.view_list : Icons.grid_view),
-                onPressed: () {
-                  setState(() => _isGridView = !_isGridView);
-                },
-                tooltip: _isGridView ? 'List View' : 'Grid View',
+              Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: IconButton(
+                  icon: Icon(_isGridView ? Icons.view_list : Icons.grid_view),
+                  onPressed: () {
+                    setState(() => _isGridView = !_isGridView);
+                  },
+                  tooltip: _isGridView ? 'List View' : 'Grid View',
+                ),
               ),
-              IconButton(
-                icon: const Icon(Icons.logout_rounded),
-                onPressed: _logout,
-                tooltip: 'Logout',
+              Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: IconButton(
+                  icon: const Icon(Icons.logout_rounded),
+                  onPressed: _logout,
+                  tooltip: 'Logout',
+                ),
               ),
             ],
           ),
