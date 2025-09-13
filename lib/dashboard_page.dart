@@ -155,7 +155,7 @@ class _DashboardPageState extends State<DashboardPage> with SingleTickerProvider
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            expandedHeight: 160,
+            expandedHeight: 90,
             floating: false,
             pinned: true,
             elevation: 0,
