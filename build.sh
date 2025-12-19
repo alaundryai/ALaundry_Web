@@ -45,7 +45,7 @@ flutter pub get 2>&1 | grep -v "Woah!" || flutter pub get
 
 # Build for web with release mode
 echo "🔨 Building Flutter web app..."
-flutter build web --release --web-renderer canvaskit 2>&1 | grep -v "Woah!" || flutter build web --release --web-renderer canvaskit
+flutter build web --release 2>&1 | grep -v "Woah!" || flutter build web --release
 
 echo "✅ Build complete! Output in build/web"
 echo "📁 Build output contents:"
