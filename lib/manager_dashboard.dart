@@ -2475,13 +2475,28 @@ class _UserManagementSectionState extends State<UserManagementSection> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('User ${user.isActive ? "disabled" : "enabled"} successfully'),
+            backgroundColor: Colors.green,
           ),
         );
       }
     } catch (e) {
       if (mounted) {
+        String errorMessage = 'Error updating user status';
+        if (e.toString().contains('not found')) {
+          errorMessage = 'User not found. The user may have been deleted.';
+        } else if (e.toString().contains('permission') || e.toString().contains('RLS')) {
+          errorMessage = 'Permission denied. You may not have permission to update this user.';
+        } else if (e.toString().contains('is_active column does not exist')) {
+          errorMessage = 'Database configuration error. The is_active column does not exist. Please contact the administrator.';
+        } else {
+          errorMessage = 'Error: ${e.toString()}';
+        }
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
+          SnackBar(
+            content: Text(errorMessage),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 5),
+          ),
         );
       }
     }
@@ -2571,6 +2586,11 @@ class _UserManagementSectionState extends State<UserManagementSection> {
                           redirectTo: null, // Optional: set redirect URL if needed
                         );
                       } else {
+                        // Validate user ID exists
+                        if (user.id == null || user.id!.isEmpty) {
+                          throw Exception('Invalid user ID. Cannot update user.');
+                        }
+                        
                         final updates = <String, dynamic>{
                           'name': nameController.text.trim(),
                           'role': roleToSave,
@@ -2599,10 +2619,28 @@ class _UserManagementSectionState extends State<UserManagementSection> {
                       }
                     } catch (e) {
                       if (mounted) {
+                        String errorMessage = 'Error updating user';
+                        final errorString = e.toString().toLowerCase();
+                        
+                        if (errorString.contains('not found') || 
+                            errorString.contains('pgrst116') ||
+                            errorString.contains('0 rows')) {
+                          errorMessage = 'User not found or update failed. The user may have been deleted.';
+                        } else if (errorString.contains('permission') || 
+                                   errorString.contains('rls') ||
+                                   errorString.contains('create_update_functions')) {
+                          errorMessage = 'Permission denied. Please run the SQL in create_update_functions.sql in your Supabase SQL Editor to create the RPC function that bypasses RLS.';
+                        } else if (errorString.contains('function') || 
+                                   errorString.contains('does not exist')) {
+                          errorMessage = 'Database function missing. Please run create_update_functions.sql in your Supabase SQL Editor.';
+                        } else {
+                          errorMessage = 'Error: ${e.toString()}';
+                        }
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text('Error: $e'),
+                            content: Text(errorMessage),
                             backgroundColor: Colors.red,
+                            duration: const Duration(seconds: 6),
                           ),
                         );
                       }

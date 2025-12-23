@@ -50,3 +50,4 @@ flutter build web --release 2>&1 | grep -v "Woah!" || flutter build web --releas
 echo "✅ Build complete! Output in build/web"
 echo "📁 Build output contents:"
 ls -la build/web/ | head -20
+
